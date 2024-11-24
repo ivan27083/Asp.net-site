@@ -1,0 +1,159 @@
+.light {
+    --font-color: #000;
+    --link-color: #1C75B9;
+    --link-white-color: #000;
+    --link-white-color-contrast: #000;
+    --bg-color: #EEE;
+    --bg-color-contrast: #FFF;
+}
+
+.dark {
+    --font-color: #C1BFBD;
+    --link-color: #0a86da;
+    --link-white-color: #c1bfbd;
+    --link-white-color-contrast: #EEE;
+    --bg-color: #333;
+    --bg-color-contrast: #222;
+}
+
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem gray;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+  background: var(--bg-color);
+  color: var(--font-color);
+}
+    body > header{
+        background: var(--bg-color-contrast);
+        color: var(--font-color);
+    }
+    body > footer{
+        background: var(--bg-color-contrast);
+        color: var(--font-color);
+    }
+
+a, a:hover {
+    color: var(--link-white-color) !important;
+    background: var(--bg-color-contrast)!important;
+}
+    a:hover {
+        background: var(--bg-color) !important;
+    }
+button, button:hover {
+    color: var(--link-white-color-contrast) !important;
+    background: var(--bg-color) !important;
+}
+    button:hover {
+        background: var(--bg-color-contrast) !important;
+    }
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+aside {
+    background-color: var(--bg-color) !important;
+    color: var(--font-color);
+    border: 1px solid white;
+}
+.sidebar > div{
+    margin-bottom: 1rem;
+}
+
+.sidebar {
+    height: calc(100vh - 56px); /* Высота, учитывающая navbar */
+    width: 250px;
+    background-color: #f1f1f1;
+    padding-top: 10px;
+    transition: transform 0.3s ease-in-out;
+    overflow-y: auto;
+    position: fixed; /* Важно для корректного позиционирования */
+    top: 56px; /* Смещение на высоту navbar */
+    left: 0;
+}
+
+    .sidebar.hidden {
+        transform: translateX(-100%);
+    }
+
+.content {
+    margin-left: 250px;
+    padding: 1rem;
+    transition: margin-left 0.3s ease-in-out;
+}
+
+    .content.sidebar-hidden {
+        margin-left: 0;
+    }
+
+.toggle-sidebar {
+    margin-bottom: 10px;
+    background-color: #333;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+    .toggle-sidebar.hidden {
+        opacity: 0; /* Кнопка становится невидимой */
+        pointer-events: none; /* Кнопка не реагирует на события мыши */
+    }
+
+.close-sidebar {
+    margin-top: 10px;
+    margin-right: 10px;
+    background-color: #333;
+    color: white;
+    padding: 0 10px;
+    padding-bottom: 3px;
+    font-size: large;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%); /* Скрыта по умолчанию */
+    }
+
+        .sidebar.visible {
+            transform: translateX(0); /* Показывается при необходимости */
+        }
+
+    .content {
+        margin-left: 0;
+    }
+}
+.product-card {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.product-image {
+    max-width: 100%;
+    height: auto;
+}
+
+.toggle-theme:hover {
+    color: var(--link-color-white);
+}

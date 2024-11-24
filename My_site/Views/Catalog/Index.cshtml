@@ -1,0 +1,181 @@
+﻿@{
+    ViewData["Title"] = "Catalog";
+}
+<div class="container">
+    <div class="row">
+        <aside class="sidebar hidden" id="sidebar">
+            <a class="btn close-sidebar" onclick="closeSidebar()">&lt;</a>
+            <h3>Фильтры</h3>
+            <div class="form-group">
+                <label for="priceRange">Цена:</label>
+                <input type="number" class="input-group" id="minPrice" autocomplete="off">
+                <input type="number" class="input-group" id="maxPrice" autocomplete="off">
+            </div>
+
+            <div class="form-group">
+                <label>Видеокарта:</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="Nvidia" id="nvidia" autocomplete="off" filter-checkbox>
+                    <label class="form-check-label" for="nvidia">
+                        Nvidia
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="AMD" id="amd" autocomplete="off" filter-checkbox>
+                    <label class="form-check-label" for="amd">
+                        AMD
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="Intel" id="intel" autocomplete="off" filter-checkbox>
+                    <label class="form-check-label" for="intel">
+                        Intel
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Рейтинг:</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating" id="rating1" value="1" autocomplete="off">
+                    <label class="form-check-label" for="rating1">
+                        от 1 звезды
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating" id="rating2" value="2" autocomplete="off">
+                    <label class="form-check-label" for="rating2">
+                        от 2 звезд
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating" id="rating3" value="3" autocomplete="off">
+                    <label class="form-check-label" for="rating3">
+                        от 3 звезд
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating" id="rating4" value="4" autocomplete="off">
+                    <label class="form-check-label" for="rating4">
+                        от 4 звезд
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating" id="rating5" value="4.5" autocomplete="off">
+                    <label class="form-check-label" for="rating5">
+                        от 4.5 звезд
+                    </label>
+                </div>
+            </div>
+            <div>
+                <button class=" btn btn-primary" id="applyFilter">Применить</button>
+            </div>
+        </aside>
+
+        
+        <div class="col content sidebar-hidden" id="content">
+            <a class="btn toggle-sidebar" id="toggleSidebarButton" onclick="toggleSidebar()">Фильтры</a>
+            <h3>Товары</h3>
+            <div class="row" id="itemsContainer">
+                <!-- Здесь будут блоки товаров -->
+                <div class="col-xl-6">
+                    <div class="product-card">
+                        <img src="placeholder.jpg" alt="Product 1" class="product-image">
+                        <h4>Компьютер 1</h4>
+                        <p>Описание товара 1</p>
+                        <p>Цена: 50000 руб.</p>
+                        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="far fa-star"></i>
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <div class="product-card">
+                        <img src="placeholder.jpg" alt="Product 2" class="product-image">
+                        <h4>Компьютер 2</h4>
+                        <p>Описание товара 2</p>
+                        <p>Цена: 70000 руб.</p>
+                        <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                <!-- Добавьте еще товаров -->
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+        function toggleSidebar() {
+            var sidebar = document.getElementById("sidebar");
+            var content = document.getElementById("content");
+            var toggleButton = document.getElementById("toggleSidebarButton");
+            sidebar.classList.remove("hidden");
+            content.classList.remove("sidebar-hidden");
+            toggleButton.classList.toggle("hidden");
+        }
+
+        function closeSidebar() {
+            var sidebar = document.getElementById("sidebar");
+            var content = document.getElementById("content");
+            var toggleButton = document.getElementById("toggleSidebarButton");
+            sidebar.classList.toggle("hidden");
+            content.classList.toggle("sidebar-hidden");
+            toggleButton.classList.remove("hidden");
+        }
+    </script>
+    <script>
+        function getActiveCheckbox(){
+            let checkedList = [];
+            document.querySelectorAll('[filter-checkbox]').forEach(function(x) {
+               if (x.checked) checkedList.push(x.value);
+            })
+            return checkedList;
+        }
+        function getRating(){
+            let rating = document.querySelector('input[name = "rating"]:checked');
+            return rating === null ? 0 : rating.value;
+        }
+        function safetyParseFloat(stringSelector) {
+            let value = parseFloat($(stringSelector).val());
+            return isNaN(value) ? 0 : value;
+        }
+        
+        function getWithFilter()
+        {
+            var filterData = {
+                MinPrice: safetyParseFloat('#minPrice'),
+                MaxPrice: safetyParseFloat('#maxPrice'),
+                GPU: getActiveCheckbox(),
+                MinRating: getRating()
+            };
+
+        $('#itemsContainer').empty();
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetItems","Catalog")',
+                data: JSON.stringify(filterData),
+                contentType: 'application/json',
+                success: function(data)
+                {
+                    if (data){
+                        data.forEach(function (item){
+                            $('#itemsContainer').append(`<div class="col-xl-6">
+                                <div class="product-card">
+                                    <img src="${item.url}" alt="${item.name}" class="product-image">
+                                    <h4>${item.name} [${item.gpu}]</h4>
+                                    <p>${item.price} руб.</p>
+                                    <p>Рейтинг ${item.rating}</p>
+                                </div>
+                            </div>`);
+                        });
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error('Ошибка:', textStatus, errorThrown);
+                    $('#itemsContainer').append('<p>Ошибка загрузки элементов каталога</p>');
+                }
+            })
+        }
+        getWithFilter();
+        $('#applyFilter').on('click', getWithFilter);
+    </script>
+}

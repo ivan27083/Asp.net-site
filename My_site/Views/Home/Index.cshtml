@@ -1,0 +1,76 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<section class="hero-image">
+    <div class="container h-100 d-flex flex-column justify-content-center">
+        <h1 class="display-1 text-center mb-4">Welcome to Our Computer Store</h1>
+        <p class="text-center fs-4 mb-4">Find the perfect computer for your needs.</p>
+        <div class="text-center">
+            <a class="btn btn-primary btn-lg" asp-area="" asp-controller="Catalog" asp-action="Index">Shop now</a>
+        </div>
+    </div>
+</section>
+
+<section class="featured-products py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Featured Products</h2>
+        <div class="row row-cols-1 row-cols-md-3 g-4" id="itemsContainer">
+            
+        </div>
+    </div>
+</section>
+
+
+<section class="call-to-action py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h2 class="mb-4">Ready to Upgrade?</h2>
+                <a class="btn btn-primary btn-lg" asp-area="" asp-controller="Catalog" asp-action="Index">Browse our catalog</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts{
+    <script>
+        function loadItems(){
+            $('#itemsContainer').empty();
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetItems", "Home")',
+                data: JSON.stringify(filterData),
+                contentType: 'application/json',
+                success: function(data)
+                {
+                    if (data){
+                            let description = item.description;
+                            let maxLength = 100;
+                            if (description.length > maxLength) {
+                                description = description.substring(0, maxLength) + "...";
+                            }
+                        data.forEach(function (item){
+                            $('#itemsContainer').append(`<div class="col">
+                                    <div class="card h-100">
+                                        <img src="${item.url}" class="card-img-top" alt="Product 1">
+                                        <div class="card-body">
+                                            <h5 class="card-title">${item.name}</h5>
+                                            <p class="card-text">${item.description}</p>
+                                            <a href="#" class="btn btn-primary">View Details</a>
+                                        </div>
+                                    </div>
+                                </div>`);
+                        });
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error('Ошибка:', textStatus, errorThrown);
+                    $('#itemsContainer').append('<p>Ошибка загрузки элементов каталога</p>');
+                }
+            })
+        }
+        window.onload = loadItems();
+    </script>
+}
