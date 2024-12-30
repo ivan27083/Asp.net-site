@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "My_site", "My_site\My_site.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{622AF813-B347-43F1-84B0-87D8C4BB7575}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "My_stie.Domain", "My_stie.Domainn\My_stie.Domain.csproj", "{7601F0C0-279D-48C3-8CFA-62FD227517F0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "My_site.Domain", "My_stie.Domainn\My_site.Domain.csproj", "{7601F0C0-279D-48C3-8CFA-62FD227517F0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DAL", "DAL", "{CEE678CD-1964-4086-8DB5-09FA62885818}"
 EndProject

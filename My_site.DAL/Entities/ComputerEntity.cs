@@ -1,7 +1,7 @@
 ﻿
-namespace My_stie.Domainn.DomainModels
+namespace My_site.DAL.Entities
 {
-    public class Computer
+    public class ComputerEntity
     {
         public int Id { get; set; }
         public string Url { get; set; }

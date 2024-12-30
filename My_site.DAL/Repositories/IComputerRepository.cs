@@ -1,12 +1,12 @@
-﻿using My_stie.Domainn.DomainModels;
+﻿using My_site.DAL.Entities;
 
 namespace My_site.DAL.Repositories
 {
     public interface IComputerRepository
     {
-        Task Create(Computer entity);
-        Task Delete(Computer entity);
-        IQueryable<Computer> GetAll();
-        Task<Computer> Update(Computer entity);
+        Task Create(ComputerEntity entity);
+        Task Delete(ComputerEntity entity);
+        IQueryable<ComputerEntity> GetAll();
+        Task<ComputerEntity> Update(ComputerEntity entity);
     }
 }

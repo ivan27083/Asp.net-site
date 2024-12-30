@@ -1,0 +1,75 @@
+﻿@model My_site.DAL.Entities.UserEntity
+
+<div class="container mt-5">
+    <h2 class="text-center">Edit Profile</h2>
+
+    <div class="card mx-auto" style="max-width: 600px;">
+        <div class="card-body">
+            <form method="post" action="/Profile/EditProfile">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="Email" value="@Model.Email" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" value="@Model.Username" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" value="******" readonly>
+                </div>
+                <a href="#" id="changePasswordLink" class="btn btn-primary">Change Password</a>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a href="./" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById("changePasswordLink").addEventListener("click", async function (event) {
+        event.preventDefault();
+        const email = document.getElementById("email").value;
+
+        const response = await fetch("/Profile/ValidateEmail", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email: email }),
+        });
+
+        const result = await response.json();
+
+        if (result.isValid) {
+            let data = new URLSearchParams();
+            data.append("email", email);
+            await fetch("/Profile/SendPasswordResetEmail", {
+            method: "POST",
+            body: data,
+            });
+            alert("A link to change your password has been sent to your email.");
+            window.location.replace("/");
+        } 
+        else {
+            openChangePasswordModal();
+        }
+    });
+        function openChangePasswordModal() {
+        const email = $('#email').val();
+
+        $.ajax({
+            url: '/Authorization/ChangePasswordModal?email=' + encodeURIComponent(email),
+            type: 'GET',
+            success: function (data) {
+                $('#modalContainer').html(data);
+
+                var modal = new bootstrap.Modal(document.getElementById('changePasswordModal'));
+                modal.show();
+            },
+            error: function (xhr, status, error) {
+                console.error("Ошибка AJAX:", error, xhr.status, xhr.responseText);
+                alert('Ошибка загрузки модального окна: ' + status + " " + error);
+            }
+        });
+    }
+</script>

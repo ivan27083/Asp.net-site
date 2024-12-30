@@ -1,0 +1,57 @@
+﻿<div class="modal" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginModalLabel">Login</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                    </div>
+                    <div class="alert alert-danger d-none" id="errorMessage">Invalid login credentials</div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="loginButton">Login</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('#loginButton').on('click', function () {
+        const email = $('#email').val();
+        const password = $('#password').val();
+        const errorMessage = $('#errorMessage');
+
+        errorMessage.addClass('d-none');
+
+        $.ajax({
+            url: `/api/Users/Login?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`,
+            type: 'POST',
+            success: function () {
+                alert('Login successful!');
+                const modal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+                modal.hide();
+                location.reload();
+            },
+            error: function (xhr) {
+                if (xhr.status === 401) {
+                    errorMessage.text('Invalid login credentials');
+                    errorMessage.removeClass('d-none');
+                } else {
+                    console.error('An error occurred:', xhr.responseText);
+                    alert('An unexpected error occurred.');
+                }
+            }
+        });
+    });
+</script>
+

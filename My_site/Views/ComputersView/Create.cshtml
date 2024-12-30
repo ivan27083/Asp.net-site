@@ -1,0 +1,99 @@
+﻿@model My_site.DAL.Entities.ComputerEntity
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create Computer</h1>
+
+<h4>Computer</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form id="createComputerForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input id="name" name="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input id="description" name="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input id="price" name="Price" type="number" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GPU" class="control-label"></label>
+                <input id="gpu" name="GPU" class="form-control" />
+                <span asp-validation-for="GPU" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Rating" class="control-label"></label>
+                <input id="rating" name="Rating" type="number" step="0.1" class="form-control" />
+                <span asp-validation-for="Rating" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Choose Image</label>
+                <input id="imageFile" name="ImageFile" type="file" class="form-control" />
+                <small class="form-text text-muted">The file should be located in the /content/images directory.</small>
+            </div>
+            <div class="form-group">
+                <label asp-for="Url" class="control-label"></label>
+                <input id="url" name="Url" class="form-control" readonly />
+                <span asp-validation-for="Url" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <button type="button" id="createButton" class="btn btn-primary">Create</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#imageFile').on('change', function () {
+                var filePath = $(this).val();
+                var fileName = filePath.split('\\').pop();
+                var relativePath = `/content/images/${fileName}`;
+                $('#url').val(relativePath);
+            });
+
+            $('#createButton').click(function () {
+                var data = {
+                    Name: $('#name').val(),
+                    Description: $('#description').val(),
+                    Price: parseInt($('#price').val(), 10),
+                    GPU: $('#gpu').val(),
+                    Rating: parseFloat($('#rating').val()),
+                    Url: $('#url').val()
+                };
+
+                $.ajax({
+                    url: '/api/Computers',
+                    type: 'POST',
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    success: function (response) {
+                        alert('Computer created successfully.');
+                        window.location.href = '/ComputersView/Index';
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                        alert('Error creating computer.');
+                    }
+                });
+            });
+
+        });
+    </script>
+}

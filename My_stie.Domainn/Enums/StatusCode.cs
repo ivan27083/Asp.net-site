@@ -1,5 +1,5 @@
 ﻿
-namespace My_stie.Domain.Enums
+namespace My_site.Domain.Enums
 {
     public enum StatusCode
     {

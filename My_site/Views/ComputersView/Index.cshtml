@@ -1,0 +1,82 @@
+﻿@model IEnumerable<My_site.DAL.Entities.ComputerEntity>
+
+@{
+    ViewData["Title"] = "Computers";
+}
+
+<h1>Computers</h1>
+
+<a asp-action="Create" class="btn btn-primary">Create New</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>GPU</th>
+            <th>Rating</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody id="itemsContainer">
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        function delete_btn_callback(button, id) {
+            console.log(`Deleting computer with ID: ${id}`);
+            $.ajax({
+                type: "DELETE",
+                url: `/api/Computers/${id}`,
+                contentType: 'application/json',
+                success: function() {
+                    button.closest('tr').remove();
+                    console.log(`Computer with ID ${id} successfully deleted.`);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error(`Error deleting ID ${id}:`, textStatus, errorThrown);
+                }
+            });
+        }
+
+        $('#itemsContainer').empty();
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetComputers", "Computers")',
+            data: null,
+            contentType: 'application/json',
+            success: function(data) {
+                if (data) {
+                    data.forEach(function(item) {
+                        let imageHtml = item.url ? `<img src="${item.url}" alt="Computer Image" style="max-width: 100px; max-height: 100px;" />` : '<span>No image</span>';
+                        $('#itemsContainer').append(`
+                            <tr>
+                                <td>${item.id}</td>
+                                <td>${imageHtml}</td>
+                                <td>${item.name}</td>
+                                <td>${item.description}</td>
+                                <td>${item.price}</td>
+                                <td>${item.gpu}</td>
+                                <td>${item.rating}</td>
+                                <td>
+                                    <a href="/ComputersView/Details/${item.id}" class="btn btn-info">Details</a>
+                                    <a href="/ComputersView/Edit/${item.id}" class="btn btn-warning">Edit</a>
+                                    <button class="btn btn-danger" onclick="delete_btn_callback(this, ${item.id})">Delete</button>
+                                </td>
+                            </tr>
+                        `);
+                    });
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('Error:', textStatus, errorThrown);
+                $('#itemsContainer').append('<p>Error loading computers</p>');
+            }
+        });
+    </script>
+}

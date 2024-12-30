@@ -19,3 +19,35 @@ function checkTheme() {
 }
 window.onload = checkTheme();
 $('#button-theme').on('click', setTheme);
+
+function openAuthModal() {
+    $.ajax({
+        url: '/Authorization/AuthorizationModal',
+        type: 'GET',
+        success: function (data) {
+            $('#modalContainer').html(data);
+
+            var modal = new bootstrap.Modal(document.getElementById('loginModal'));
+            modal.show();
+        },
+        error: function () {
+            alert('Failed to load the authorization modal.');
+        }
+    });
+}
+
+function openRegisterModal() {
+    $.ajax({
+        url: '/Authorization/RegistrationModal',
+        type: 'GET',
+        success: function (data) {
+            $('#modalContainer').html(data);
+
+            var modal = new bootstrap.Modal(document.getElementById('registerModal'));
+            modal.show();
+        },
+        error: function () {
+            alert('Failed to load the authorization modal.');
+        }
+    });
+}

@@ -1,0 +1,60 @@
+﻿<div class="modal" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="registerModalLabel">Register</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+            </div>
+            <div class="modal-body">
+                <form id="registerForm">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" placeholder="Enter your username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                    </div>
+                    <div class="alert alert-danger d-none" id="errorMessage">Registration failed</div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="registerButton">Register</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#registerButton').on('click', function () {
+        const username = $('#username').val();
+        const email = $('#email').val();
+        const password = $('#password').val();
+        const errorMessage = $('#errorMessage');
+
+        errorMessage.addClass('d-none');
+
+        const data = `username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`;
+
+        $.ajax({
+            url: '/api/Users/Register?'+data,
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded',
+            success: function () {
+                alert('Registration successful!');
+                const modal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
+                modal.hide();
+                location.reload();
+            },
+            error: function (xhr) {
+                errorMessage.text('Registration failed');
+                errorMessage.removeClass('d-none');
+            }
+        });
+    });
+</script>

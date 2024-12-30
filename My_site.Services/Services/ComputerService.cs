@@ -1,12 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using My_site.DAL.Entities;
 using My_site.DAL.Repositories;
-using My_site.ViewModels;
-using My_stie.Domainn.DomainModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using My_site.Domain.Models;
 
 namespace My_site.Services.Implementations
 {
@@ -16,7 +11,7 @@ namespace My_site.Services.Implementations
         public ComputerService(IComputerRepository computerRepository)
         {
             _computerRepository = computerRepository;
-            //_computerRepository.Create(new Computer()
+            //_computerRepository.Create(new ComputerEntity()
             //{
             //    Url = "/content/images/ardor_gaming_rage_h359.webp",
             //    Name = "ARDOR GAMING RAGE H359",
@@ -25,7 +20,7 @@ namespace My_site.Services.Implementations
             //    GPU = "AMD",
             //    Rating = 3.8
             //});
-            //_computerRepository.Create(new Computer()
+            //_computerRepository.Create(new ComputerEntity()
             //{
             //    Url = "/content/images/ardor_gaming_neo_m157.webp",
             //    Name = "ARDOR GAMING NEO M157",
@@ -35,7 +30,7 @@ namespace My_site.Services.Implementations
             //    Rating = 5
             //});
         }
-        public async Task<IEnumerable<Computer>> GetAll(CatalogFilterViewModel filter)
+        public async Task<IEnumerable<ComputerEntity>> GetAll(CatalogFilterViewModel filter)
         {
             return await _computerRepository.GetAll()
                 .Where(item =>
@@ -45,7 +40,7 @@ namespace My_site.Services.Implementations
                     (item.Rating >= filter.MinRating))
                 .ToListAsync();
         }
-        public async Task<IEnumerable<Computer>> GetForMain()
+        public async Task<IEnumerable<ComputerEntity>> GetForMain()
         {
             return await _computerRepository.GetAll().OrderByDescending(c => c.Rating).Take(3).ToListAsync();
         }

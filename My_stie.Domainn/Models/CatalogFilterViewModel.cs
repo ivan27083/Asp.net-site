@@ -1,4 +1,4 @@
-﻿namespace My_site.ViewModels
+﻿namespace My_site.Domain.Models
 {
     public class CatalogFilterViewModel
     {

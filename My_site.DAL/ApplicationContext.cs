@@ -1,19 +1,30 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using My_stie.Domainn.DomainModels;
+using Microsoft.Extensions.Options;
+using My_site.DAL.Configurations;
+using My_site.DAL.Entities;
+using My_site.DAL.Repositories;
 
 namespace My_site.DAL
 {
-    public class ApplicationContext : DbContext
+    public class ApplicationContext(
+        DbContextOptions<ApplicationContext> options,
+        IOptions<AuthorizationOptions> authOptions) : DbContext (options)
     {
-        public DbSet<Computer> Computers { get; set; } = null!;
-
-        public ApplicationContext()
-        {
-            Database.EnsureCreated();
-        }
+        public DbSet<ComputerEntity> Computers { get; set; } = null!;
+        public DbSet<UserEntity> Users { get; set; } = null!;
+        public DbSet<RoleEntity> Roles { get; set; } = null!;
+        public DbSet<UserActionLog> UserActionLogs { get; set; } = null!;
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=My_site;Username=postgres;Password=971254");
+            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=My_site;Username=postgres;Password=971254", b =>
+                b.MigrationsAssembly("My_site.DAL"));
+            base.OnConfiguring(optionsBuilder);
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfiguration(new RolePermissionConfiguration(authOptions.Value));
+            modelBuilder.ApplyConfiguration(new UserActionLogConfiguration());
         }
     }
 }

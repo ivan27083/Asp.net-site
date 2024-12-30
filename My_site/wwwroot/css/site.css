@@ -63,9 +63,24 @@ button, button:hover {
     button:hover {
         background: var(--bg-color-contrast) !important;
     }
+table {
+    color: var(--link-white-color) !important;
+}
+    table > tbody {
+        color: var(--link-white-color) !important;
+    }
+tbody > tr > td {
+    color: var(--link-white-color) !important;
+}
 
 input[type="number"] {
     -moz-appearance: textfield;
+}
+
+.card {
+    background-color: var(--bg-color) !important;
+    color: var(--font-color);
+    border: 1px solid white;
 }
 
 aside {

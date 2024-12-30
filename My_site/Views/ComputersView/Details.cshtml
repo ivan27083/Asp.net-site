@@ -1,0 +1,83 @@
+﻿@{
+    ViewData["Title"] = "Computer Details";
+}
+
+<h1>Computer Details</h1>
+<div class="row">
+    <div class="col-md-6">
+        <div id="computerDetails">
+            <h4>Loading...</h4>
+        </div>
+    </div>
+</div>
+<div>
+    <a href="/ComputersView/Index" class="btn btn-secondary">Back to List</a>
+</div>
+
+@section Scripts {
+    <script>
+        function getIdFromUrl() {
+            const urlParts = window.location.href.split('/');
+            return urlParts[urlParts.length - 1];
+        }
+
+        $(document).ready(function () {
+            var id = getIdFromUrl();
+
+            if (!id) {
+                alert("ID not provided!");
+                return;
+            }
+
+            $.ajax({
+                url: '/api/Computers/' + id,
+                type: 'GET',
+                contentType: 'application/json',
+                success: function (data) {
+                    if (data) {
+                        $('#computerDetails').html(`
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>ID</th>
+                                    <td>${data.id}</td>
+                                </tr>
+                                <tr>
+                                    <th>Name</th>
+                                    <td>${data.name}</td>
+                                </tr>
+                                <tr>
+                                    <th>Description</th>
+                                    <td>${data.description}</td>
+                                </tr>
+                                <tr>
+                                    <th>Price</th>
+                                    <td>${data.price}</td>
+                                </tr>
+                                <tr>
+                                    <th>GPU</th>
+                                    <td>${data.gpu}</td>
+                                </tr>
+                                <tr>
+                                    <th>Rating</th>
+                                    <td>${data.rating}</td>
+                                </tr>
+                                <tr>
+                                    <th>Image</th>
+                                    <td>
+                                        ${data.url ? `<img src="${data.url}" alt="Computer Image" style="max-width: 150px; max-height: 150px;" />` : '<span>No image available</span>'}
+                                    </td>
+                                </tr>
+                            </table>
+                        `);
+                    } else {
+                        $('#computerDetails').html('<p>No details available for this computer.</p>');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching computer details:', error);
+                    $('#computerDetails').html('<p>Error fetching computer details.</p>');
+                }
+            });
+        });
+    </script>
+}

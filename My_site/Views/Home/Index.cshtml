@@ -39,26 +39,24 @@
             $('#itemsContainer').empty();
 
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: '@Url.Action("GetItems", "Home")',
-                data: JSON.stringify(filterData),
                 contentType: 'application/json',
                 success: function(data)
                 {
                     if (data){
+                        data.forEach(function (item){
                             let description = item.description;
                             let maxLength = 100;
                             if (description.length > maxLength) {
                                 description = description.substring(0, maxLength) + "...";
                             }
-                        data.forEach(function (item){
                             $('#itemsContainer').append(`<div class="col">
                                     <div class="card h-100">
                                         <img src="${item.url}" class="card-img-top" alt="Product 1">
                                         <div class="card-body">
                                             <h5 class="card-title">${item.name}</h5>
-                                            <p class="card-text">${item.description}</p>
-                                            <a href="#" class="btn btn-primary">View Details</a>
+                                            <p class="card-text">${description}</p>
                                         </div>
                                     </div>
                                 </div>`);

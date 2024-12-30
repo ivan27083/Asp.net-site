@@ -9,6 +9,11 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body class="light">
+    @{
+        var IsAuthenticated = Context.Items["IsAuthenticated"] != null && (bool)Context.Items["IsAuthenticated"];
+        var UserName = Context.Items["UserName"]?.ToString() ?? "Undefined";
+        int? Role = Context.Items["Role"] as int?;
+    }
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3">
             <div class="container-fluid">
@@ -25,16 +30,36 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Catalog" asp-action="Index">Catalog</a>
                         </li>
+                        @if (Role == 1){
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="ComputersView" asp-action="Index">Edit</a>
+                            </li>
+                        }
+                        @if (Role != null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Logs" asp-action="Index">Statistics</a>
+                            </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Privacy" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
+                    @if (!IsAuthenticated){
+                        <button class="btn me-2" id="authButton" onclick="openAuthModal()">Вход</button>
+                        <button class="btn me-2" id="reg" onclick="openRegisterModal()">Регистрация</button>
+                    }
+                    else{
+                        <a class="btn me-2" asp-area="" asp-controller="Profile" asp-action="Index">Профиль</a>
+                        <a asp-controller="Profile" asp-action="Exit" class="btn btn-danger me-2">Выйти</a>
+                    }
                     <button class="btn toggle-theme" id="button-theme">Тема</button>
                 </div>
             </div>
         </nav>
     </header>
     <div class="container">
+        <div id="modalContainer"></div>
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -48,6 +73,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
